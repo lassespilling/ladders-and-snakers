@@ -1,91 +1,6 @@
-:root {
-  --board-frame: red;
-}
-h1 {
-  width: 100%;
-  text-align: center;
-}
-* {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
-    Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-}
-
-body {
-  background-color: beige;
-}
-html,
-body {
-  height: 100%;
-}
-body {
-  display: grid;
-  place-content: center;
-}
-.jscolor-picker,
-.jscolor-wrap {
-  height: max-content !important;
-  width: max-content !important;
-}
-.jscolor-wrap .jscolor-palette,
-.jscolor-wrap .jscolor-palette-sw {
-  position: relative !important;
-  top: 0 !important;
-  left: 0 !important;
-}
-.jscolor-palette-sw > div {
-  width: 1.5rem !important;
-  height: 1.5rem !important;
-}
-.jscolor-wrap .jscolor-palette {
-  display: grid !important;
-  gap: 0.2rem !important;
-  grid-template-columns: repeat(4, 1fr) !important;
-}
-.jscolor-picker {
-  padding: 1rem !important;
-}
-.jscolor-picker > *:not(.jscolor-palette) {
-  display: none !important;
-}
-#number-of-players input {
-  margin-bottom: 0.5rem;
-  display: block;
-  width: 100%;
-  margin-top: 0.5rem;
-}
-#number-of-players:after {
-  content: attr(data-error);
-  color: red;
-}
-form#intro-form {
-  height: max-content;
-  transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
-  display: flex;
-  flex-direction: column;
-  max-width: 500px;
-  background-color: #fff;
-  padding: 2rem;
-  box-shadow: rgba(255, 255, 255, 0.1) 0px 1px 1px 0px inset,
-    rgba(50, 50, 93, 0.25) 0px 50px 100px -20px,
-    rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
-}
-* {
-  box-sizing: border-box;
-}
-[data-player-picker-labels],
-[data-player-pickers] {
-  display: grid;
-  grid-template-columns: 80% 20%;
-  gap: 0.5rem;
-  width: 100%;
-}
-[data-name-picker] {
-  width: 100%;
-}
 #player,
 #message {
-  font-size: 1.25rem;
-  text-align: center;
+  text-align: left;
   width: 50%;
   box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px,
     rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
@@ -115,14 +30,6 @@ input[data-color-picker] {
   gap: 0.25rem;
   margin-bottom: 0.5rem;
 }
-button#create-players {
-  background-color: greenyellow;
-  cursor: pointer;
-  display: none;
-}
-button#create-players.ready {
-  display: block;
-}
 
 body:not(.game-ready) .gameBoard {
   display: none;
@@ -132,70 +39,136 @@ body:not(.game-ready) .gameBoard {
   justify-content: center;
   gap: 1rem;
 }
-button#play {
-  font-size: 1.5rem;
-  line-height: 1;
-  display: block;
-  background-color: greenyellow;
+button#create-players:not(.ready) {
+  display: none;
+}
+button#play,
+button#create-players {
+  background: transparent;
+  font-weight: bold;
+  padding: 0;
+  text-shadow: 0px 0px 2px #fff;
+  display: grid;
+  align-items: center;
+  width: 100%;
+  height: 60px;
+  grid-template-columns: auto 1fr auto;
+}
+button#play span,
+button#create-players span {
+  background: url('../images/btn-center.png') center center / 100% 100%;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+button#play:before,
+button#create-players:before {
+  background: url('../images/btn-start.png') center center / 100% 100%;
+}
+button#play:after,
+button#create-players:after {
+  background: url('../images/btn-end.png') center center / 100% 100%;
+}
+button#play:before,
+button#play:after,
+button#create-players:before,
+button#create-players:after {
+  content: '';
+  aspect-ratio: 130 / 169;
+  position: relative;
+  height: 60px;
+  display: inline-block;
 }
 .game-ready #ui {
   display: flex;
   align-items: center;
 }
+body:not(.game-ready) #gameBoardOuter {
+  display: none;
+}
 #gameBoardOuter {
-  min-height: 80vh;
-  background: red;
+  width: unset !important;
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
 }
 .gameBoard {
-  width: 624px;
   height: auto;
-  overflow: hidden;
-  margin: 20px auto 0 auto;
   overflow: hidden;
 }
 .gameBoard > .gameBoardInner {
-  width: 100%;
   margin: 0;
   height: auto;
   padding: 0;
-  background: var(--board-frame);
-  border: 12px solid var(--board-frame);
+  --frame-size: 50px;
+  display: grid;
+  place-content: center;
+  border-radius: 5px;
+  background: url('../images/frame-x.png') top center / 100% var(--frame-size)
+      repeat-x,
+    url('../images/frame-x.png') bottom center / 100% var(--frame-size) repeat-x,
+    url('../images/frame-y.png') left / var(--frame-size) 100% repeat-y,
+    url('../images/frame-y.png') right / var(--frame-size) 100% repeat-y;
+  /* border: var(--frame-size) solid transparent; */
+  padding: var(--frame-size);
 }
 
 #player {
-  grid-area: player;
   width: 100%;
+  display: flex;
+  align-items: center;
+  min-height: 2.5rem;
+  padding: 0.5rem;
+}
+#message {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  min-height: 2.5rem;
+  padding: 0.5rem;
 }
 #players-wrapper {
-  grid-area: allplayers;
-  width: 100%;
-}
-#dice {
-  grid-area: dice;
   width: 100%;
 }
 #play {
-  grid-area: playbtn;
   width: 100%;
+}
+#player {
+  grid-area: player;
 }
 #message {
   grid-area: message;
-  width: 100%;
+}
+#players-wrapper {
+  grid-area: allplayers;
+}
+#play {
+  grid-area: rollbtn;
+}
+#logo {
+  grid-area: logo;
 }
 .gameBoard > .gameInterface {
-  background: var(--board-frame);
-  width: 100%;
-  height: auto;
+  margin-top: auto;
+  margin-bottom: auto;
+  background: #d5b087;
+  height: max-content;
   overflow: hidden;
   padding: 0;
+  width: max-content;
   display: grid;
-  gap: 1rem;
-  padding: 1rem;
-  padding-top: 0;
-  grid-template-columns: auto auto auto auto;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  grid-template-columns: 1fr;
+  min-width: min(400px, 90vw);
   grid-template-areas:
-    'player player message message'
-    'allplayers allplayers dice playbtn';
+    'logo'
+    'player'
+    'message'
+    'allplayers'
+    'rollbtn';
 }
 .gameBoard > .gameInterface > .players {
   padding: 5px;
@@ -219,18 +192,28 @@ button#play {
   border-radius: 12px;
 }
 .dice {
-  width: 64px;
-  height: 64px;
+  position: fixed;
+  inset: 0;
+  margin: auto;
+  width: 200px;
+  height: 200px;
+  --dice-eye-size: 40px;
+  display: none;
+}
+.dice.show {
+  display: block;
 }
 .dice > div {
-  width: 64px;
-  height: 64px;
+  width: 200px;
+  height: 200px;
   margin: 0;
   padding: 8px;
   background-color: #e7e7e7;
   object-fit: contain;
   box-shadow: inset 0 2px white, inset 0 -2px #bbb, inset 2px 0 #d7d7d7,
-    inset -2px 0 #d7d7d7;
+    inset -2px 0 #d7d7d7, rgba(0, 0, 0, 0.25) 0px 54px 55px,
+    rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px,
+    rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
   border-radius: 10%;
   float: left;
   overflow: hidden;
@@ -285,8 +268,8 @@ button#play {
 .dice > div > span,
 .dice > div > div > span {
   display: block;
-  width: 10px;
-  height: 10px;
+  width: var(--dice-eye-size);
+  height: var(--dice-eye-size);
   border-radius: 50%;
   margin: 0;
   background-color: #333;
@@ -311,23 +294,21 @@ button#play {
   display: flex;
 }
 
-p.credits {
-  display: block;
-  font-size: 13px;
-  font-style: italic;
-  clear: both;
-  margin: 9px 0 0 2px;
-  padding: 0;
-}
-
 button {
   border: none;
-  border-radius: 5px;
-  margin-top: 3px;
-  padding-bottom: 3px;
-  font-size: 16px;
-  line-height: 19px;
-  float: right;
+  border-radius: 4px;
+  font-size: 1rem;
+  line-height: 1;
+  padding: 1rem 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.23, 1, 0.32, 1);
+}
+button:not(.disabled):hover {
+  filter: brightness(120%);
+  transform: scale(0.99);
+}
+button:not(.disabled):active {
+  transform: scale(0.98);
 }
 button.disabled {
   opacity: 0.5;
@@ -367,8 +348,6 @@ button.disabled {
 
 @media only screen and (max-height: 500px) {
   .gameBoard > .gameInterface > .player {
-    font-size: 14px;
-    line-height: 15px;
     margin: 0 20px 3px 20px;
     width: 200px;
   }
@@ -381,7 +360,6 @@ button.disabled {
   }
   .gameBoard > .gameInterface > .players > div {
     margin: 2px 2px 2px 0;
-    font-size: 12px;
   }
   .gameBoard > .gameInterface > .players > div::before {
     height: 14px;
@@ -390,7 +368,6 @@ button.disabled {
 }
 @media only screen and (max-width: 550px) {
   .gameBoard > .gameInterface > .player {
-    font-size: 14px;
     line-height: 15px;
     margin: 0 20px 3px 20px;
     width: calc(100% - 100px);
@@ -404,7 +381,6 @@ button.disabled {
   }
   .gameBoard > .gameInterface > .players > div {
     margin: 2px 2px 2px 0;
-    font-size: 12px;
   }
   .gameBoard > .gameInterface > .players > div::before {
     height: 14px;

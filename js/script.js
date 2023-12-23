@@ -17,58 +17,122 @@ CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
+const getSpecialTile = (index, key) => {
+  return config?.specialTiles[index] ? config?.specialTiles[index][key] : false;
+};
 const msg = (msg) => {
-  document.getElementById('message').innerHTML = msg;
+  q('#message').innerHTML = msg;
+};
+const playerMsg = (msg) => {
+  q('#player').innerText = msg;
+};
+const getPlayerName = (player, format = 'long') => {
+  if (format === 'short' && player.name.includes(' ')) {
+    return player.name.split(' ')[1];
+  } else {
+    return player.name;
+  }
 };
 let adjectives = [
-  'Lure',
-  'Skvære',
-  'Sprøe',
-  'Rare',
-  'Løye',
-  'Sprette',
-  'Sjarmerende',
-  'Snodige',
-  'Snerte',
-  'Lite',
-  'Kjappe',
-  'Svippe',
-  'Kule',
-  'Spreke',
-  'Flinke',
+  'Glade',
   'Søte',
-  'Tøysete',
-  'Tøffe',
-  'Røffe',
-  'Klønete',
-  'Morsomme',
-  'Frekke',
-  'Lekre',
-  'Kjekke',
-  'Stilige',
-  'Pjuske',
+  'Fargerike',
+  'Smidige',
+  'Lekne',
+  'Smarte',
+  'Rike',
   'Høye',
-  'Korte',
-  'Sprøytete',
-  'Tullete',
-  'Tøsete',
-  'Kosete',
-  'Daffe',
-  'Rasende',
-  'Skøre',
-  'Svære',
-  'Dinglende',
-  'Kniksede',
-  'Sjarmerte',
-  'Tassende',
-  'Lattermilde',
-  'Tjukke',
+  'Raske',
+  'Modige',
+  'Sterke',
+  'Lysende',
+  'Varme',
+  'Elegante',
+  'Harmoniske',
+  'Rene',
+  'Morsomme',
+  'Skarpe',
+  'Brede',
+  'Rolige',
+  'Gode',
+  'Høflige',
+  'Stille',
+  'Muntre',
+  'Fantastiske',
+  'Kreative',
+  'Delikate',
+  'Krydrede',
+  'Lykkelige',
+  'Lysende',
+  'Majestetiske',
+  'Begeistrede',
+  'Friske',
+  'Forfriskende',
+  'Blanke',
+  'Storslåtte',
+  'Velsignede',
+  'Strålende',
+  'Prangende',
   'Slanke',
-  'Føyelige',
-  'Flørtende',
-  'Nusselige',
-  'Vippede',
-  'Fjollete',
+  'Lyse',
+  'Praktfulle',
+  'Euforiske',
+  'Enkle',
+  'Fargerike',
+  'Stødige',
+  'Skinnende',
+  'Lysende',
+  'Utsøkte',
+  'Jevne',
+  'Skjelvende',
+  'Smilende',
+  'Glitrende',
+  'Livlige',
+  'Stødige',
+  'Solidariske',
+  'Høylytte',
+  'Storslåtte',
+  'Lekne',
+  'Brokete',
+  'Strålende',
+  'Friske',
+  'Vennlige',
+  'Trøtte',
+  'Skitne',
+  'Glade',
+  'Ydmyke',
+  'Usikre',
+  'Fargerike',
+  'Usikre',
+  'Trofaste',
+  'Friske',
+  'Åpne',
+  'Tøffe',
+  'Uvurderlige',
+  'Glade',
+  'Brede',
+  'Gode',
+  'Lysende',
+  'Fargerike',
+  'Spennende',
+  'Modne',
+  'Store',
+  'Drømmende',
+  'Skarpe',
+  'Trøtte',
+  'Trofaste',
+  'Våkne',
+  'Praktiske',
+  'Strålende',
+  'Søte',
+  'Friske',
+  'Lette',
+  'Kreative',
+  'Behagelige',
+  'Lekne',
+  'Slanke',
+  'Spennende',
+  'Flinke',
 ];
 var things = [
   'Abdier',
@@ -140,7 +204,7 @@ var things = [
   'Sakarjer',
   'Salomer',
   'Saraer',
-  'Tabitae',
+  'Tabitaer',
 ];
 function generateRandomName() {
   return (
@@ -165,110 +229,6 @@ jscolor.presets.default = {
   previewSize: 0, // make the color preview bigger
   palette: palette,
 };
-var players = null;
-let q = (query) => document.querySelector(query);
-let qAll = (query) => document.querySelectorAll(query);
-let create = (tag) => document.createElement(tag);
-let pNames = q('#player-names');
-q('#number-of-players')?.focus();
-// Step 1 number of players
-q('#number-of-players').addEventListener('input', (e) => {
-  let min = parseInt(e.target.getAttribute('min'));
-  let max = parseInt(e.target.getAttribute('max'));
-  let numPlayers = parseInt(e.target.value);
-  q('#number-of-players').setAttribute('data-error', '');
-  if (numPlayers > max) {
-    q('#number-of-players').setAttribute(
-      'data-error',
-      `Du må ha maks ${max} spillere!`
-    );
-  } else if (numPlayers < min) {
-    q('#number-of-players').setAttribute(
-      'data-error',
-      `Du må ha minst ${min} spillere!`
-    );
-  }
-  let resetPlayerInputs = () => {
-    while (pNames.lastElementChild) {
-      pNames.removeChild(pNames.lastElementChild);
-    }
-  };
-  if (numPlayers >= min && numPlayers <= max) {
-    resetPlayerInputs();
-    q('#player-names').innerHTML = `
-    <div data-player-picker-labels><span>Lagnavn</span><span>Farge</span></div>
-    `;
-    for (let i = 0; i < numPlayers; i++) {
-      let div = create('div');
-      let namePicker = create('input');
-      let colorPicker = create('input');
-      namePicker.placeholder = `Hva heter lag ${i + 1}?`;
-      namePicker.required = true;
-      colorPicker.required = true;
-      namePicker.value = generateRandomName();
-      namePicker.setAttribute('data-name-picker', '');
-      colorPicker.setAttribute('data-color-picker', '');
-      div.setAttribute('data-player-pickers', '');
-      new JSColor(colorPicker, {
-        value: palette[i],
-        //   random: '[100, 100, 99, 100, 50, 100]',
-        hideOnPaletteClick: true,
-      });
-      // : Value = 80–100, Saturation = 10–20, Hue = 0–359
-      div.appendChild(namePicker);
-      div.appendChild(colorPicker);
-      q('#player-names').appendChild(div);
-      if (!i < numPlayers) {
-        q('#create-players').classList.add('ready');
-      }
-    }
-  } else {
-    q('#create-players').classList.remove('ready');
-    resetPlayerInputs();
-  }
-
-  //   setTimeout(() => {
-  //     q('#player-names input')?.focus();
-  //   }, [100]);
-});
-
-// Step 2 create players
-q('#intro-form').addEventListener('submit', (e) => {
-  e.preventDefault();
-  let arr = [];
-  qAll('#player-names [data-player-pickers]').forEach((el, index) => {
-    let name = el.querySelector('[data-name-picker]').value;
-    let color = el.querySelector('[data-current-color]').value;
-    arr.push({
-      name: name,
-      win: `${name}, du har vunnet!`,
-      position: 0,
-      element: null,
-      color: color,
-    });
-  });
-  if (arr.length > 0) {
-    players = arr;
-    startGame();
-  }
-});
-// var players = [
-//   {
-//     name: 'Player1',
-//     win: 'You Win!',
-//     position: 0,
-//     element: null,
-//     color: 'cyan',
-//   },
-//   {
-//     name: 'Player2',
-//     win: 'Computer Wins!',
-//     position: 0,
-//     element: null,
-//     color: 'red',
-//   },
-// ];
-
 const startGame = () => {
   document.body.classList.add('game-ready');
   document.body.removeChild(q('#intro-form'));
@@ -277,90 +237,13 @@ const startGame = () => {
     let div = document.createElement('div');
     let span = document.createElement('span');
 
-    span.innerText = player.name;
+    span.innerText = getPlayerName(player);
     div.id = `player${index}`;
     div.classList.add(`player${index}`);
     div.style.setProperty('--player-color', player.color);
     div.appendChild(span);
     playerWrapper.appendChild(div);
   });
-  var config = {
-    gameBoardSize: window.innerHeight * 0.7,
-    tilesPerAxis: 10,
-    oddTileColor: '#D3E5F3',
-    evenTileColor: '#FDFAED',
-    textColor: '#000055',
-    ladderColor: 'blue',
-    snakeColor: '#00CC33',
-    snakeOutlineColor: '#009922',
-    piece: [
-      '<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="0.0499409in" ' +
-        'height="0.0851102in" version="1.1" style="shape-rendering:geometricPrecision; ' +
-        'text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"' +
-        'viewBox="0 0 0 0"' +
-        'xmlns:xlink="http://www.w3.org/1999/xlink">' +
-        '<path fill="{color}" d="M0 0c0,0 0,0 0,0 0,0 0,0 0,0 0,0 0,0 0,0 0,0 0,0 0,0 0,0 0,0 0,0l0 0c0,0 0,0 0,0 0,0 0,0 0,0 0,0 0,0 0,0 0,0 0,0 0,0 0,0 0,0 0,0l0 0c0,0 0,0 0,0l0 0c0,0 0,0 0,0z"/>' +
-        '</svg>',
-    ],
-    ladders: [
-      [1, 38],
-      [4, 14],
-      [9, 31],
-      [28, 84],
-      [40, 42],
-      [51, 67],
-      [71, 91],
-      [80, 100],
-    ],
-    snakes: [
-      ['98', '98 -2 -7', '82 9 1', '83 -3 -6', '78'],
-      ['95', '95 -3 -7', '85 6 3', '86 -2 -3', '75'],
-      ['93', '93 7 -1', '89 -6 2', '88 4 -6', '73'],
-      ['87', '74 3 7', '75 5 -7', '66 -9 0', '57 3 3', '36 3 4', '24'],
-      ['64', '58 2 2', '59 2 7', '60'],
-      ['62', '58 5 -3', '39 5 7', '23 3 3', '19'],
-      ['56', '56 8 3', '66 0 -7', '54', '53'],
-      ['49', '33 3 6', '32 -2 -3', '29', '11'],
-      ['47', '47 -4 -8', '35 2 -2', '26 9 9', '26'],
-      ['16', '17 7 -3', '5 -4 8', '5'],
-    ],
-    //A B C D in clockwise order, defaults as "D"
-    //eventually these will be autodectected
-    textPositions: {
-      100: 'A',
-      93: 'C',
-      88: 'A',
-      87: 'C',
-      85: 'A',
-      84: 'A',
-      82: 'C',
-      75: 'B',
-      68: 'B',
-      67: 'A',
-      66: 'B',
-      65: 'A',
-      63: 'A',
-      62: 'A',
-      58: 'C',
-      57: 'C',
-      55: 'C',
-      48: 'A',
-      42: 'B',
-      41: 'C',
-      36: 'A',
-      35: 'A',
-      34: 'C',
-      29: 'C',
-      23: 'C',
-      22: 'A',
-      20: 'C',
-      17: 'A',
-      15: 'A',
-      16: 'B',
-      12: 'C',
-    },
-  };
-
   (function (pool, math) {
     //
     // The following constants are related to IEEE 754 limits.
@@ -679,6 +562,7 @@ const startGame = () => {
         .attr('cy', counterRadius)
         .attr('cx', counterRadius)
         .attr('r', counterRadius * 1.2);
+
       player.element
         .append('circle')
         .style('fill', player.color)
@@ -778,8 +662,8 @@ const startGame = () => {
     }
 
     function buildGameBoard() {
-      var w = window.innerWidth - 60;
-      var h = window.innerHeight - 90;
+      var w = window.innerWidth - config.safeZone;
+      var h = window.innerHeight - config.safeZone;
       var snakeIndex;
 
       var gameBoardSize = config.gameBoardSize;
@@ -794,9 +678,23 @@ const startGame = () => {
       gameBoard = d3
         .select('#gameBoard')
         .append('svg')
+        .attr('id', 'game-svg')
         .attr('width', gameBoardSize)
         .attr('height', gameBoardSize)
         .style('fill', 'black');
+      var defs = d3.select('#game-svg').append('svg:defs');
+      config.svgImages?.forEach((bg) => {
+        defs
+          .append('pattern')
+          .attr('id', bg.id)
+          .attr('patternUnits', 'userSpaceOnUse')
+          .attr('width', bg.width || gameBoardSize / config.tilesPerAxis)
+          .attr('height', bg.height || gameBoardSize / config.tilesPerAxis)
+          .append('svg:image')
+          .attr('xlink:href', bg.url)
+          .attr('width', bg.width || gameBoardSize / config.tilesPerAxis)
+          .attr('height', bg.height || gameBoardSize / config.tilesPerAxis);
+      });
 
       tileSize = gameBoardSize / config.tilesPerAxis;
       var fontSize = tileSize / 4.5;
@@ -816,18 +714,38 @@ const startGame = () => {
 
           addGridRef(labelIndex, xPos, yPos);
 
+          let getTileBg = (index) => {
+            let special = getSpecialTile(index, 'fill');
+            if (special) {
+              return special;
+            } else {
+              return odd ? config.oddTileColor : config.evenTileColor;
+            }
+          };
+          let tileFill = getTileBg(labelIndex);
+          // CREATE TILES
           gameBoard
             .append('rect')
             .attr('height', tileSize)
             .attr('width', tileSize)
             .attr('x', xPos)
             .attr('y', yPos)
-            .style('fill', odd ? config.oddTileColor : config.evenTileColor);
+            .style('fill', tileFill);
 
           var textPosition = config.textPositions[labelIndex] || 'D';
           var onLeft = textPosition === 'A' || textPosition === 'C';
           var onTop = textPosition === 'A' || textPosition === 'B';
 
+          // CREATE TILE TEXT MARKERS
+          let getTileColor = (index) => {
+            let special = getSpecialTile(index, 'color');
+            if (special) {
+              return special;
+            } else {
+              return config.textColor;
+            }
+          };
+          let tileTextColor = getTileColor(labelIndex);
           gameBoard
             .append('text')
             .text(labelIndex)
@@ -843,7 +761,7 @@ const startGame = () => {
                 (onTop ? -tileSize + 3 * textOffset : -textOffset)
             )
             .style('text-anchor', onLeft ? 'start' : 'end')
-            .style('fill', config.textColor)
+            .style('fill', tileTextColor)
             .style('font-size', fontSize + 'px');
 
           odd = !odd;
@@ -863,7 +781,7 @@ const startGame = () => {
       var ladderWidth = tileSize / 9;
 
       for (snakeIndex = 0; snakeIndex < config.ladders.length; snakeIndex++) {
-        var ladder = config.ladders[snakeIndex];
+        var ladder = config.ladders[snakeIndex].paths;
 
         var x1 = gridReference[ladder[0]].x + offset;
         var y1 = gridReference[ladder[0]].y + offset;
@@ -882,6 +800,7 @@ const startGame = () => {
           { x: x1 - xOffset, y: y1 + yOffset },
           { x: x2 - xOffset, y: y2 + yOffset },
         ];
+        // CREATE LADDERS rail 1
         gameBoard
           .append('path')
           .attr('id', ladderId)
@@ -893,6 +812,7 @@ const startGame = () => {
           { x: x1 + xOffset, y: y1 - yOffset },
           { x: x2 + xOffset, y: y2 - yOffset },
         ];
+        // CREATE LADDERS rail 2
         gameBoard
           .append('path')
           .attr('d', linearInterpolator(d))
@@ -918,6 +838,7 @@ const startGame = () => {
           padY = -padY;
         }
 
+        // CREATE LADDER STEPS
         for (var j = 0; j < rungCount; j++) {
           gameBoard
             .append('line')
@@ -1038,8 +959,8 @@ const startGame = () => {
     }
 
     function buildSnake(snakeIndex) {
-      var snake = config.snakes[snakeIndex];
-      var snakeStroke = tileSize / 6;
+      var snake = config.snakes[snakeIndex].paths;
+      var snakeStroke = tileSize / 5;
 
       var data = [];
       var position;
@@ -1060,13 +981,6 @@ const startGame = () => {
         position.y -= (tileSize / 20) * snakePos[2];
         data.push(position);
       }
-
-      gameBoard
-        .append('circle')
-        .style('fill', config.snakeOutlineColor)
-        .attr('cx', data[0].x)
-        .attr('cy', data[0].y)
-        .attr('r', 1.1 * snakeStroke + 1);
 
       var path = gameBoard
         .append('path')
@@ -1135,12 +1049,28 @@ const startGame = () => {
         .attr('fill', config.snakeColor)
         .attr('stroke', config.snakeOutlineColor);
 
+      // Snake head outline
+      // gameBoard
+      //   .append('circle')
+      //   .style('fill', config.snakeOutlineColor)
+      //   .attr('cx', data[0].x)
+      //   .attr('cy', data[0].y)
+      //   .attr('r', 1.1 * snakeStroke + 1);
+
+      // Snake head
+      // gameBoard
+      //   .append('rect')
+      //   .style('fill', config.snakeHeadColor)
+      //   .attr('x', data[0].x - tileSize / 5)
+      //   .attr('y', data[0].y - tileSize / 5)
+      //   .attr('width', tileSize / 2)
+      //   .attr('height', tileSize / 2);
       gameBoard
         .append('circle')
-        .style('fill', config.snakeColor)
+        .style('fill', config.snakeHeadColor)
         .attr('cx', data[0].x)
         .attr('cy', data[0].y)
-        .attr('r', 1.1 * snakeStroke);
+        .attr('r', 1.5 * snakeStroke);
     }
 
     function rotatePoints(p1, p2, radians) {
@@ -1203,11 +1133,9 @@ const startGame = () => {
 
     function setCurrentPlayer() {
       if (round === 1) {
-        document.getElementById('player').innerText =
-          players[currentPlayerIndex].name + ' begynner.';
+        playerMsg(`${getPlayerName(players[currentPlayerIndex])} begynner.`);
       } else {
-        document.getElementById('player').innerText =
-          players[currentPlayerIndex].name + ' sin tur.';
+        playerMsg(`${getPlayerName(players[currentPlayerIndex])} sin tur.`);
       }
       if (players[currentPlayerIndex].name === 'Computer') {
         var computerTimeout = setTimeout(function () {
@@ -1226,8 +1154,10 @@ const startGame = () => {
     }
 
     function roll(callback) {
+      playerMsg(`${getPlayerName(players[currentPlayerIndex])} kaster`);
       round++;
       var diceElement = document.getElementById('dice');
+      diceElement.className = 'dice';
       var tumbles = 3 + getRandom(5);
       var sequence = [];
       for (var i = 0; i < tumbles; i++) {
@@ -1235,15 +1165,20 @@ const startGame = () => {
       }
       var rollInterval = setInterval(function () {
         var n = sequence.pop();
-        diceElement.className = 'dice show' + n;
+        diceElement.className = 'dice show show' + n;
         if (sequence.length === 0) {
           callback(n);
           clearInterval(rollInterval);
           msg(
-            `${
-              players[currentPlayerIndex].name?.split(' ')[1]
-            } rullet en ${n}er!`
+            `${getPlayerName(
+              players[currentPlayerIndex],
+              'short'
+            )} rullet en ${n}er!`
           );
+          // When to hide dice
+          setTimeout(() => {
+            diceElement.className = 'dice';
+          }, 1000);
         }
       }, 200);
     }
@@ -1332,19 +1267,140 @@ const startGame = () => {
           }
         } else {
           var hotSpot = hotSpots[currentPlayer.position];
-          if (hotSpot) {
-            var hotPath = gameBoard.select('#' + hotSpot.path);
-            animate(
-              hotPath,
-              currentPlayer.element,
-              2000,
-              -counterRadius + hotSpot.xOffset,
-              -counterRadius - hotSpot.yOffset,
-              function () {
-                currentPlayer.position = hotSpot.endPosition;
-                finishPlay();
+          var special = config.specialTiles[currentPlayer.position];
+          if (special) {
+            // let endPos = hotSpot.endTile;
+            let type = special.type;
+            const completed = (status) => {
+              if (status === 'success') {
+                let endPosition = special['success'].endTile;
+                let n = Math.min(endPosition - currentPlayer.position);
+                let shortName = getPlayerName(player, 'short');
+                msg(`Bra jobba ${shortName}!`);
+                playerMsg(`${shortName} flytter`);
+                doHop(n);
+              } else {
+                doHop(-2);
               }
-            );
+            };
+            if (type === 'challenge') {
+              showModal({
+                header: `${getPlayerName(currentPlayer)} landet på ${
+                  currentPlayer.position
+                }.`,
+                children: `
+                <p><strong><em>Fullfør denne utfordringen</em></strong></p>
+                <blockquote>${special.challenge}</blockquote>
+              `,
+                callback: (status) => {
+                  completed(status);
+                },
+                delay: 500,
+              });
+            } else if (type === 'question') {
+              showModal({
+                header: `${getPlayerName(currentPlayer)} landet på ${
+                  currentPlayer.position
+                }.`,
+                children: `
+                  <p><strong><em>Svar på dette spørsmålet:</em></strong></p>
+                  <blockquote>${special.question}</blockquote>
+                `,
+                callback: (status) => {
+                  completed(status);
+                },
+                delay: 500,
+                answer: special.answer,
+              });
+            }
+            // specialTiles: {
+            //   2: {
+            //     type: 'challenge',
+            //     color: '#ff0000',
+            //     challenge: 'Hold planken i 2 minutter',
+            //     success: {
+            //       endTile: 15,
+            //     },
+            //     failure: {
+            //       endTile: 1,
+            //     },
+            //   },
+            //   3: {
+            //     type: 'question',
+            //     color: '#00ff00',
+            //     question: 'Hva representerer tallet 3 i bibelen?',
+            //     answer: 'Helhet',
+            //     success: {
+            //       endTile: 15,
+            //     },
+            //     failure: {
+            //       endTile: 1,
+            //     },
+            //   },
+            // },
+          } else if (hotSpot) {
+            const completeHotspot = () => {
+              var hotPath = gameBoard.select('#' + hotSpot.path);
+              animate(
+                hotPath,
+                currentPlayer.element,
+                2000,
+                -counterRadius + hotSpot.xOffset,
+                -counterRadius - hotSpot.yOffset,
+                function () {
+                  currentPlayer.position = hotSpot.endPosition;
+                  finishPlay();
+                }
+              );
+            };
+            // let endPos = hotSpot.endPosition;
+            // let hotSpotType = hotSpot.path.includes('ladder')
+            //   ? 'ladder'
+            //   : hotSpot.path.includes('snake')
+            //   ? snake
+            //   : '';
+            if (hotSpot.path.includes('snake')) {
+              showModal({
+                header: `${getPlayerName(currentPlayer)} landet på ${
+                  currentPlayer.position
+                }.`,
+                children: `
+                    <h1>🐍😰</h1>
+                    <p><strong>Her var det en slange gitt!</strong></p>
+                `,
+                delay: 0,
+                cancel: 'Ok..',
+                confirm: null,
+                callback: () => {
+                  playerMsg(`${getPlayerName(currentPlayer)} blir bitt.`);
+                  msg(``);
+                  setTimeout(() => {
+                    completeHotspot();
+                  }, 500);
+                },
+              });
+            }
+            if (hotSpot.path.includes('ladder')) {
+              showModal({
+                header: `${getPlayerName(currentPlayer)} landet på ${
+                  currentPlayer.position
+                }.`,
+                children: `
+                    <h1>🙏🪜😇👼</h1>
+                    <p><strong>Halleluja! En himmelstige!</strong></p>
+                `,
+                delay: 0,
+                cancel: null,
+                confirm: 'Klatre opp',
+                callback: () => {
+                  playerMsg(`${getPlayerName(currentPlayer)} klatrer.`);
+                  msg(``);
+                  setTimeout(() => {
+                    completeHotspot();
+                  }, 500);
+                },
+              });
+            }
           } else {
             finishPlay();
           }
@@ -1411,3 +1467,107 @@ const startGame = () => {
   });
   app.run();
 };
+
+if (skipIntro) {
+  var players = [
+    {
+      name: 'Spiller',
+      win: 'You Win!',
+      position: 0,
+      element: null,
+      color: 'cyan',
+    },
+    {
+      name: 'CPU',
+      win: 'CPU Wins!',
+      position: 0,
+      element: null,
+      color: 'red',
+    },
+  ];
+  startGame();
+} else {
+  var players = null;
+  let pNames = q('#player-names');
+  q('#number-of-players')?.focus();
+  // Step 1 number of players
+  q('#number-of-players').addEventListener('input', (e) => {
+    let min = parseInt(e.target.getAttribute('min'));
+    let max = parseInt(e.target.getAttribute('max'));
+    let numPlayers = parseInt(e.target.value);
+    q('#number-of-players').setAttribute('data-error', '');
+    if (numPlayers > max) {
+      q('#number-of-players').setAttribute(
+        'data-error',
+        `Du må ha maks ${max} spillere!`
+      );
+    } else if (numPlayers < min) {
+      q('#number-of-players').setAttribute(
+        'data-error',
+        `Du må ha minst ${min} spillere!`
+      );
+    }
+    let resetPlayerInputs = () => {
+      while (pNames.lastElementChild) {
+        pNames.removeChild(pNames.lastElementChild);
+      }
+    };
+    if (numPlayers >= min && numPlayers <= max) {
+      resetPlayerInputs();
+      q('#player-names').innerHTML = `
+    <div data-player-picker-labels><span>Lagnavn</span><span>Farge</span></div>
+    `;
+      for (let i = 0; i < numPlayers; i++) {
+        let div = create('div');
+        let namePicker = create('input');
+        let colorPicker = create('input');
+        namePicker.placeholder = `Hva heter lag ${i + 1}?`;
+        namePicker.required = true;
+        colorPicker.required = true;
+        namePicker.value = generateRandomName();
+        namePicker.setAttribute('data-name-picker', '');
+        colorPicker.setAttribute('data-color-picker', '');
+        div.setAttribute('data-player-pickers', '');
+        new JSColor(colorPicker, {
+          value: palette[i],
+          //   random: '[100, 100, 99, 100, 50, 100]',
+          hideOnPaletteClick: true,
+        });
+        // : Value = 80–100, Saturation = 10–20, Hue = 0–359
+        div.appendChild(namePicker);
+        div.appendChild(colorPicker);
+        q('#player-names').appendChild(div);
+        if (!i < numPlayers) {
+          q('#create-players').classList.add('ready');
+        }
+      }
+    } else {
+      q('#create-players').classList.remove('ready');
+      resetPlayerInputs();
+    }
+
+    //   setTimeout(() => {
+    //     q('#player-names input')?.focus();
+    //   }, [100]);
+  });
+  // Step 2 create players
+  q('#intro-form').addEventListener('submit', (e) => {
+    e.preventDefault();
+    let arr = [];
+    qAll('#player-names [data-player-pickers]').forEach((el, index) => {
+      let name = el.querySelector('[data-name-picker]').value;
+      let color = el.querySelector('[data-current-color]').value;
+      arr.push({
+        name: name,
+        win: `${name}, du har vunnet!`,
+        position: 0,
+        element: null,
+        color: color,
+      });
+    });
+    if (arr.length > 0) {
+      players = arr;
+      startGame();
+    }
+  });
+}

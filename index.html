@@ -3,13 +3,16 @@
 
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Slanger og stiger i paradis</title>
-  <link rel="stylesheet" href="./style.css">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/intro.css">
+  <link rel="stylesheet" href="css/gameboard.css">
+  <link rel="stylesheet" href="css/modal.css">
 
 </head>
 
 <body>
-  <h1>Slanger og stiger i paradis</h1>
   <form id="intro-form">
     <label id="number-of-players">
       <span> Hvor mange skal spille?
@@ -20,14 +23,14 @@
     <div id="player-names">
 
     </div>
-    <button type="submit" id="create-players">Ok</button>
+    <button type="submit" id="create-players"><span>Start spill</span></button>
   </form>
 
   <!-- partial:index.partial.html -->
   <div class="gameBoard" id="gameBoardOuter">
     <div id="gameBoard" class="gameBoardInner"></div>
     <div class="gameInterface">
-
+      <img src="./images/logo.svg" id="logo" />
       <div id="message"></div>
       <div id="player" class="player"></div>
       <div class="players" id="players-wrapper">
@@ -74,10 +77,12 @@
     </div>
   </div>
   <!-- partial -->
-  <script src="jscolor.min.js"></script>
-
-  <script src='https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js'></script>
-  <script src="./script.js"></script>
+  <script src="js/jscolor.min.js"></script>
+  <script src='js/d3.min.js'></script>
+  <script src="js/config.js"></script>
+  <script src="js/utilities.js"></script>
+  <script src="js/script.js"></script>
+  <script src="js/debug.js"></script>
 
 </body>
 
