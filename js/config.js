@@ -34,6 +34,20 @@ var config = {
         endTile: 6,
       },
     },
+    29: {
+      type: 'question',
+      fill: "url('#question-icon')",
+      color: '#fff',
+      question: 'Nevn de 12 disiplene',
+      answer:
+        'Simon Peter, Andreas, Jakob, Johannes, Filip, Bartolomeus, Matteus, Tomas, Jakob, Taddeus, Simon seloten, Judas Iskariot',
+      success: {
+        endTile: 41,
+      },
+      failure: {
+        endTile: 31,
+      },
+    },
     16: {
       type: 'question',
       fill: "url('#question-icon')",
@@ -48,7 +62,10 @@ var config = {
       },
     },
   },
-  gameBoardSize: window.innerHeight * 0.7,
+  gameBoardSize:
+    window.innerWidth < 1200
+      ? window.innerHeight * 0.6
+      : window.innerWidth * 0.4,
   tilesPerAxis: 8,
   oddTileColor: '#f4daa6',
   evenTileColor: '#FDFAED',
@@ -70,28 +87,37 @@ var config = {
     {
       paths: [2, 18],
     },
-    //   [4, 14],
-    //   [9, 31],
-    //   [28, 84],
-    //   [40, 42],
-    //   [51, 67],
-    //   [71, 91],
-    //   [80, 100],
+    { paths: [4, 14] },
+    { paths: [10, 26] },
+    { paths: [30, 46] },
+    { paths: [38, 43] },
+    { paths: [41, 59] },
+    { paths: [21, 52] },
+    { paths: [27, 37] },
+    { paths: [34, 49] },
   ],
   snakes: [
     {
       paths: ['20', '19 -5 -4', '2 -5 5', '1'],
     },
-    //   ['98', '98 -2 -7', '82 9 1', '83 -3 -6', '78'],
-    //   ['95', '95 -3 -7', '85 6 3', '86 -2 -3', '75'],
-    //   ['93', '93 7 -1', '89 -6 2', '88 4 -6', '73'],
-    //   ['87', '74 3 7', '75 5 -7', '66 -9 0', '57 3 3', '36 3 4', '24'],
-    //   ['64', '58 2 2', '59 2 7', '60'],
-    //   ['62', '58 5 -3', '39 5 7', '23 3 3', '19'],
-    //   ['56', '56 8 3', '66 0 -7', '54', '53'],
-    //   ['49', '33 3 6', '32 -2 -3', '29', '11'],
-    //   ['47', '47 -4 -8', '35 2 -2', '26 9 9', '26'],
-    //   ['16', '17 7 -3', '5 -4 8', '5'],
+    {
+      paths: ['60', '54 -5 -5', '42'],
+    },
+    {
+      paths: ['50', '47 -5 -5', '33 -5 -5', '17'],
+    },
+    {
+      paths: ['63', '62 -5 -5', '51'],
+    },
+    {
+      paths: ['40', '25 -5 2', '24 1 -5', '10 1 -5', '7 1 0', '8'],
+    },
+    {
+      paths: ['53', '44 -2 -3', '36'],
+    },
+    {
+      paths: ['22', '11 -4 5', '12'],
+    },
   ],
   //A B C D in clockwise order, defaults as "D"
   //eventually these will be autodectected

@@ -91,6 +91,7 @@ body:not(.game-ready) #gameBoardOuter {
 #gameBoardOuter {
   width: unset !important;
   display: flex;
+  justify-content: center;
   gap: 1rem;
   flex-wrap: wrap;
 }
@@ -149,15 +150,16 @@ body:not(.game-ready) #gameBoardOuter {
 }
 #logo {
   grid-area: logo;
+  max-width: 300px;
+  margin: auto;
 }
 .gameBoard > .gameInterface {
-  margin-top: auto;
-  margin-bottom: auto;
+  margin: auto;
   background: #d5b087;
   height: max-content;
   overflow: hidden;
   padding: 0;
-  width: max-content;
+  max-width: 600px;
   display: grid;
   gap: 0.5rem;
   padding: 0.5rem;
@@ -170,6 +172,33 @@ body:not(.game-ready) #gameBoardOuter {
     'allplayers'
     'rollbtn';
 }
+@media (max-width: 1200px) {
+  #logo {
+    grid-area: unset;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 80px;
+    margin: auto;
+    z-index: 1;
+  }
+  .gameBoard > .gameInterface {
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      'player message'
+      'allplayers allplayers'
+      'rollbtn rollbtn';
+    width: 100%;
+  }
+  .gameInterface > * {
+    width: 100%;
+  }
+  .gameBoard > .gameBoardInner {
+    --frame-size: 20px;
+  }
+}
+
 .gameBoard > .gameInterface > .players {
   padding: 5px;
   background-color: beige;
@@ -303,10 +332,23 @@ button {
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.23, 1, 0.32, 1);
 }
+button#play,
+button#create-players {
+  color: #000;
+}
+@media (hover: hover) {
+  button:not(.disabled):hover {
+    filter: brightness(90%);
+  }
+  button#play:hover,
+  button#create-players:hover {
+    filter: brightness(120%);
+  }
+}
 button:not(.disabled):hover {
-  filter: brightness(120%);
   transform: scale(0.99);
 }
+
 button:not(.disabled):active {
   transform: scale(0.98);
 }
@@ -344,46 +386,4 @@ button.disabled {
   width: 100px;
   float: none;
   background: #cccccc;
-}
-
-@media only screen and (max-height: 500px) {
-  .gameBoard > .gameInterface > .player {
-    margin: 0 20px 3px 20px;
-    width: 200px;
-  }
-  .gameBoard > .gameInterface > button {
-    margin: 0 10px;
-  }
-  .gameBoard > .gameInterface > .players {
-    height: 15px;
-    padding-top: 1px;
-  }
-  .gameBoard > .gameInterface > .players > div {
-    margin: 2px 2px 2px 0;
-  }
-  .gameBoard > .gameInterface > .players > div::before {
-    height: 14px;
-    width: 14px;
-  }
-}
-@media only screen and (max-width: 550px) {
-  .gameBoard > .gameInterface > .player {
-    line-height: 15px;
-    margin: 0 20px 3px 20px;
-    width: calc(100% - 100px);
-  }
-  .gameBoard > .gameInterface > button {
-    margin: 0 10px;
-  }
-  .gameBoard > .gameInterface > .players {
-    height: 15px;
-    padding-top: 1px;
-  }
-  .gameBoard > .gameInterface > .players > div {
-    margin: 2px 2px 2px 0;
-  }
-  .gameBoard > .gameInterface > .players > div::before {
-    height: 14px;
-    width: 14px;
-  }
 }

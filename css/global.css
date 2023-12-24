@@ -25,14 +25,24 @@ h2 {
 
 body {
   background: url('../images/bg.jpg') center center / cover no-repeat;
+  background-attachment: fixed;
   margin: auto;
   backdrop-filter: brightness(60%);
 }
-html,
-body {
+html {
   height: 100%;
 }
 body {
   display: grid;
+  overflow-y: auto;
   place-content: center;
+  min-height: 100%;
+}
+
+@media (max-width: 1200px) {
+  body {
+    place-content: unset;
+    align-items: flex-start;
+    padding-top: 50px;
+  }
 }

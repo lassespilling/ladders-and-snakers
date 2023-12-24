@@ -1,10 +1,10 @@
 .modal__confirm {
-  background-color: #4fd87c;
+  background: radial-gradient(circle, #278c48, #4fd87c);
   font-weight: bold;
   width: 100%;
 }
 .modal__cancel {
-  background-color: #ff6c6e;
+  background: radial-gradient(circle, #b63638, #ff6c6e);
   font-weight: bold;
   width: 100%;
 }

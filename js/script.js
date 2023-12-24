@@ -27,7 +27,7 @@ const playerMsg = (msg) => {
   q('#player').innerText = msg;
 };
 const getPlayerName = (player, format = 'long') => {
-  if (format === 'short' && player.name.includes(' ')) {
+  if (format === 'short' && player?.name?.includes(' ')) {
     return player.name.split(' ')[1];
   } else {
     return player.name;
@@ -1161,13 +1161,13 @@ const startGame = () => {
       var tumbles = 3 + getRandom(5);
       var sequence = [];
       for (var i = 0; i < tumbles; i++) {
-        sequence.push(getRandom(6) + 1);
+        sequence.push(5);
+        // sequence.push(getRandom(6) + 1);
       }
       var rollInterval = setInterval(function () {
         var n = sequence.pop();
         diceElement.className = 'dice show show' + n;
         if (sequence.length === 0) {
-          callback(n);
           clearInterval(rollInterval);
           msg(
             `${getPlayerName(
@@ -1178,9 +1178,10 @@ const startGame = () => {
           // When to hide dice
           setTimeout(() => {
             diceElement.className = 'dice';
-          }, 1000);
+            callback(n);
+          }, 800);
         }
-      }, 200);
+      }, 100);
     }
 
     function getPathPoints(path) {
@@ -1272,15 +1273,19 @@ const startGame = () => {
             // let endPos = hotSpot.endTile;
             let type = special.type;
             const completed = (status) => {
+              let shortName = getPlayerName(currentPlayer, 'short');
               if (status === 'success') {
                 let endPosition = special['success'].endTile;
                 let n = Math.min(endPosition - currentPlayer.position);
-                let shortName = getPlayerName(player, 'short');
                 msg(`Bra jobba ${shortName}!`);
                 playerMsg(`${shortName} flytter`);
                 doHop(n);
               } else {
-                doHop(-2);
+                let endPosition = special['failure'].endTile;
+                let n = Math.min(endPosition - currentPlayer.position);
+                msg(`Uff da ${shortName}!`);
+                playerMsg(`${shortName} flytter`);
+                doHop(n);
               }
             };
             if (type === 'challenge') {
