@@ -124,6 +124,7 @@ var config = {
 
   textPositions: {
     16: 'A',
+    37: 'A'
   },
   // textPositions: {
   //   100: 'A',
