@@ -1,0 +1,16 @@
+{
+  "scripts": {
+    "build": "yarn parcel src/index.html"
+  },
+  "dependencies": {
+    "parcel": "^2.10.3"
+  },
+  "devDependencies": {
+    "parcel-plugin-static-files-copy": "^2.6.0"
+  },
+  "staticFiles": {
+    "staticPath": [
+      "src/images"
+    ]
+  }
+}
